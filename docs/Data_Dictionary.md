@@ -2,7 +2,7 @@
 
 **Project:** A&R Intelligence Platform
 
-**Version:** 0.1.0
+**Version:** 0.1.1
 
 **Last Updated:** June 2026
 
@@ -23,15 +23,19 @@ The Data Dictionary is not a static document and will evolve as new features, da
 3. Album
 4. Label
 5. Genre
-6. Audio Feature
-7. Streaming Platform
-8. Streaming History
-9. Social Platform
-10. Social Metrics
-11. Lyrics
-12. Tour Event
-13. Media Coverage
-14. Playlist Appearance
+6. Artist Genre
+7. Song Genre
+8. Album Genre
+9. Audio Feature
+10. Streaming Platform
+11. Streaming History
+12. Social Platform
+13. Social Metrics
+14. Lyrics
+15. Tour Event
+16. Media Outlet
+17. Media Coverage
+18. Playlist Appearance
 
 ---
 
@@ -321,6 +325,132 @@ The following enhancements may be considered in future versions of the Genre ent
 - Country of origin
 - Typical BPM range
 - Typical instruments
+
+# Entity: Artist Genre
+
+## Description
+
+The Artist Genre entity represents the association between artists and their musical genres.
+
+It resolves the many-to-many relationship between Artist and Genre, allowing artists to be classified under multiple genres while enabling each genre to be associated with multiple artists.
+
+## Purpose
+
+The Artist Genre entity provides a standardized relationship between artists and genres throughout the platform. It enables flexible genre classification while maintaining database normalization and supporting genre-based analytics, recommendations, and machine learning.
+
+### Related Entities
+
+- Artist
+- Genre
+
+## Potential Data Sources
+
+- Derived
+
+## Attributes
+
+| Attribute | Data Type | Nullable | Source   | Used in ML | Description                       |
+|-----------|-----------|----------|----------|------------|-----------------------------------|
+| artist_id | BIGINT    | No       | Internal | No         | References the associated artist. |
+| genre_id  | BIGINT    | No       | Internal | No         | References the associated genre.  |
+
+## Design Notes
+
+- Artist Genre is a junction table used to resolve the many-to-many relationship between Artist and Genre.
+- Each record represents a single artist-genre association.
+- The combination of artist_id and genre_id should be unique to prevent duplicate relationships.
+
+## Future Considerations
+
+The following enhancements may be considered in future versions of the Artist Genre entity:
+
+- Primary genre indicator
+- Confidence score
+- Genre source
+
+# Entity: Song Genre
+
+## Description
+
+The Song Genre entity represents the association between songs and their musical genres.
+
+It resolves the many-to-many relationship between Song and Genre, allowing songs to be classified under multiple genres while enabling each genre to be associated with multiple songs.
+
+## Purpose
+
+The Song Genre entity provides a standardized relationship between songs and genres throughout the platform. It enables flexible genre classification while maintaining database normalization and supporting song-level analytics, similarity analysis, recommendation systems, and machine learning.
+
+### Related Entities
+
+- Song
+- Genre
+
+## Potential Data Sources
+
+- Derived
+
+## Attributes
+
+| Attribute | Data Type | Nullable | Source   | Used in ML | Description                      |
+|-----------|-----------|----------|----------|------------|----------------------------------|
+| song_id   | BIGINT    | No       | Internal | No         | References the associated song.  |
+| genre_id  | BIGINT    | No       | Internal | No         | References the associated genre. |
+
+## Design Notes
+
+- Song Genre is a junction table used to resolve the many-to-many relationship between Song and Genre.
+- Each record represents a single song-genre association.
+- The combination of song_id and genre_id should be unique to prevent duplicate relationships.
+
+## Future Considerations
+
+The following enhancements may be considered in future versions of the Song Genre entity:
+
+- Primary genre indicator
+- Confidence score
+- Genre source
+
+# Entity: Album Genre
+
+## Description
+
+The Album Genre entity represents the association between albums and their musical genres.
+
+It resolves the many-to-many relationship between Album and Genre, allowing albums to be classified under multiple genres while enabling each genre to be associated with multiple albums.
+
+## Purpose
+
+The Album Genre entity provides a standardized relationship between albums and genres throughout the platform. It enables flexible genre classification while maintaining database normalization and supporting album-level analytics and recommendation systems.
+
+### Related Entities
+
+- Album
+- Genre
+
+## Potential Data Sources
+
+- Derived
+
+## Attributes
+
+| Attribute | Data Type | Nullable | Source   | Used in ML | Description                      |
+|-----------|-----------|----------|----------|------------|----------------------------------|
+| album_id  | BIGINT    | No       | Internal | No         | References the associated album. |
+| genre_id  | BIGINT    | No       | Internal | No         | References the associated genre. |
+
+## Design Notes
+
+- Album Genre is a junction table used to resolve the many-to-many relationship between Album and Genre.
+- Each record represents a single album-genre association.
+- The combination of album_id and genre_id should be unique to prevent duplicate relationships.
+
+## Future Considerations
+
+The following enhancements may be considered in future versions of the Album Genre entity:
+
+- Primary genre indicator
+- Confidence score
+- Genre source
 
 ---
 
@@ -724,6 +854,57 @@ The following enhancements may be considered in future versions of the Tour Even
 - Performance duration
 - Tour name
 
+# Entity: Media Outlet
+
+## Description
+
+The Media Outlet entity represents organizations that publish music-related content, including news articles, interviews, reviews, podcasts, magazines, blogs, radio stations, and digital media.
+
+It serves as the primary representation of media organizations referenced throughout the A&R Intelligence Platform and provides a standardized source for media coverage records.
+
+## Purpose
+
+The Media Outlet entity provides a unique, persistent representation of media organizations referenced by the A&R Intelligence Platform. It enables consistent identification of publications while reducing redundancy across media coverage records and supporting future media-related analytics.
+
+### Related Entities
+
+- Media Coverage
+
+## Potential Data Sources
+
+- Internal
+- Official Media Websites
+- Google News API
+- GDELT Project
+
+## Attributes
+
+| Attribute        | Data Type | Nullable | Source           | Used in ML | Description                                                                      |
+|------------------|-----------|----------|------------------|------------|----------------------------------------------------------------------------------|
+| media_outlet_id  | BIGINT    | No       | Internal         | No         | Unique internal identifier.                                                      |
+| outlet_name      | TEXT      | No       | Media Source     | No         | Official name of the media outlet or publication.                                |
+| outlet_type      | TEXT      | Yes      | Derived          | Yes        | Type of outlet (Magazine, Blog, Podcast, Radio, YouTube Channel, Website, etc.). |
+| official_website | TEXT      | Yes      | Official Website | No         | Official website of the media outlet.                                            |
+| country          | TEXT      | Yes      | Derived          | Yes        | Country where the media outlet is headquartered.                                 |
+
+## Design Notes
+
+- The Media Outlet entity intentionally stores only relatively stable information.
+- Media Coverage records reference Media Outlet rather than repeatedly storing publication names.
+- New outlet metadata can be added without modifying existing media coverage records.
+
+## Future Considerations
+
+The following enhancements may be considered in future versions of the Media Outlet entity:
+
+- Monthly readership
+- Domain authority
+- Social media accounts
+- Publication focus
+- Founding year
+- Headquarters city
+- RSS feed URL
+
 ---
 
 # Entity: Media Coverage
@@ -756,7 +937,7 @@ The Media Coverage entity provides a historical record of artist appearances acr
 |-------------------|-----------|----------|--------------|------------|-------------------------------------------------------------------------|
 | media_coverage_id | BIGINT    | No       | Internal     | No         | Unique internal identifier.                                             |
 | artist_id         | BIGINT    | No       | Internal     | No         | References the associated artist.                                       |
-| publication_name  | TEXT      | No       | Media Source | Yes        | Name of the publication or media outlet.                                |
+| media_outlet_id   | BIGINT    | No       | Internal     | No         | References the media outlet that published the coverage.                |
 | article_title     | TEXT      | No       | Media Source | Yes        | Title of the article or media feature.                                  |
 | media_type        | TEXT      | No       | Derived      | Yes        | Type of coverage (News, Review, Interview, Podcast, Radio, Blog, etc.). |
 | publication_date  | DATE      | No       | Media Source | Yes        | Date the media coverage was published.                                  |
