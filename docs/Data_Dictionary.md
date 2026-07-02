@@ -16,6 +16,21 @@ This document defines the structure of the platform's data before implementation
 
 The Data Dictionary is not a static document and will evolve as new features, data sources, and machine learning models are added to the platform.
 
+## Entities
+
+1. Artist
+2. Song
+3. Album
+4. Label
+5. Genre
+6. Audio Features
+7. Streaming History
+8. Social Metrics
+9. Lyrics
+10. Tour Event
+11. News Article
+12. Playlist Appearance
+
 ---
 
 # Entity: Artist
@@ -92,4 +107,132 @@ The following attributes may be considered in future versions of the platform:
 - Years active (range)
 - Pronouns
 - Biography
-- Press photos
+- Photos
+
+---
+
+# Entity: Song
+
+## Description
+
+The Song entity represents an individual musical recording tracked by the A&R Intelligence Platform.
+
+It serves as the primary representation of a recorded work and provides the foundation for connecting song-related information, including albums, artists, genres, lyrics, audio features, streaming metrics, playlist appearances, and predictive analytics.
+
+## Purpose
+
+The Song entity provides a unique, persistent representation of every musical recording analyzed by the platform. It serves as the primary reference point for all song-level data and enables the integration of information collected from multiple external sources into a single profile.
+
+## Relationships
+
+### Child Entities
+
+- Audio Features
+- Streaming History
+- Playlist Appearances
+- Lyrics
+
+### Related Entities
+
+- Artist
+- Album
+- Genre
+
+## Potential Data Sources
+
+- Spotify Web API
+- MusicBrainz
+- Genius API
+- Last.fm API
+- YouTube Data API
+
+## Attributes
+
+| Attribute        | Data Type | Nullable | Source   | Used in ML | Description                                                |
+|------------------|-----------|----------|----------|------------|------------------------------------------------------------|
+| song_id          | BIGINT    | No       | Internal | No         | Unique internal identifier.                                |
+| song_title       | TEXT      | No       | Spotify  | No         | Official song title.                                       |
+| spotify_track_id | TEXT      | No       | Spotify  | No         | Spotify unique track identifier.                           |
+| isrc             | TEXT      | Yes      | Spotify  | No         | International Standard Recording Code.                     |
+| release_date     | DATE      | Yes      | Spotify  | Yes        | Official release date of the recording.                    |
+| duration_ms      | INTEGER   | No       | Spotify  | Yes        | Song duration in seconds.                                  |
+| track_number     | INTEGER   | Yes      | Spotify  | No         | Position on the album.                                     |
+| disc_number      | INTEGER   | Yes      | Spotify  | No         | Disc number for multi-disc releases.                       |
+| is_explicit      | BOOLEAN   | Yes      | Spotify  | Yes        | Indicates whether the recording contains explicit content. |
+
+## Design Notes
+
+- The Song entity intentionally stores only relatively stable information.
+- Audio features are modeled separately because they describe musical characteristics rather than song identity.
+- Streaming history, playlist appearances, and popularity metrics are stored separately as they change over time.
+- Lyrics are stored separately to support text analysis and natural language processing.
+
+## Future Considerations
+
+The following enhancements may be considered in future versions of the Song entity:
+
+- Alternative song titles
+- Recording version (live, acoustic, remix, etc.)
+- Language
+- Producer credits
+- Songwriter credits
+
+---
+
+# Entity: Album
+
+## Description
+
+---
+
+# Entity: Label
+
+## Description
+
+---
+
+# Entity: Genre
+
+## Description
+
+---
+
+# Entity: Audio Features
+
+## Description
+
+---
+
+# Entity: Streaming History
+
+## Description
+
+---
+
+# Entity: Social Metrics
+
+## Description
+
+---
+
+# Entity: Lyrics
+
+## Description
+
+---
+
+# Entity: Tour Event
+
+## Description
+
+---
+
+# Entity: News Article
+
+## Description
+
+---
+
+# Entity: Playlist Appearance
+
+## Description
