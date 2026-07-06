@@ -1,0 +1,193 @@
+Table Artist {
+  artist_id bigint [pk]
+  artist_name text [not null]
+  spotify_artist_id text [not null, unique]
+  artist_type text [not null]
+  city text
+  state_province text
+  country text
+  year_formed integer
+  is_active  boolean [default: true]
+  current_label_id bigint
+}
+
+Table Song {
+  song_id bigint [pk]
+  song_title text [not null]
+  spotify_track_id text [not null, unique]
+  isrc text [unique]
+  release_date date
+  duration_ms integer [not null]
+  track_number integer
+  disc_number integer
+  is_explicit boolean
+}
+
+Table Album {
+  album_id bigint [pk]
+  album_title text [not null]
+  spotify_album_id text [not null, unique]
+  album_type text [not null]
+  release_date date
+  total_tracks integer
+  album_art_url text
+  label_id bigint
+}
+
+Table Label {
+  label_id bigint [pk]
+  label_name text [not null]
+  musicbrainz_label_id text [unique]
+  country text
+  city text
+  year_founded integer
+  is_active boolean
+  official_website text
+}
+
+Table Genre {
+  genre_id bigint [pk]
+  genre_name text [not null, unique]
+  parent_genre_id bigint
+  description text
+}
+
+Table ArtistGenre {
+  artist_id bigint [pk]
+  genre_id bigint [pk]
+}
+
+Table SongGenre {
+  song_id bigint [pk]
+  genre_id bigint [pk]
+}
+
+Table AlbumGenre {
+  album_id bigint [pk]
+  genre_id bigint [pk]
+}
+
+Table AudioFeature {
+  song_id bigint [pk]
+  danceability float
+  energy float
+  valence float
+  acousticness float
+  instrumentalness float
+  speechiness float
+  liveness float
+  loudness_db float
+  tempo_bpm float
+  musical_key integer
+  musical_mode integer
+  time_signature integer
+}
+
+Table StreamingPlatform {
+  platform_id bigint [pk]
+  platform_name text [not null, unique]
+  official_website text
+  api_available boolean [not null, default: false]
+  is_active boolean [not null, default: true]
+}
+
+Table StreamingHistory {
+  streaming_history_id bigint [pk]
+  song_id bigint [not null]
+  platform_id bigint [not null]
+  snapshot_date date [not null]
+  stream_count bigint
+}
+
+Table SocialPlatform {
+  social_platform_id bigint [pk]
+  platform_name text [not null, unique]
+  official_website text
+  api_available boolean [not null, default: false]
+  is_active boolean [not null, default: true]
+}
+
+Table SocialMetrics {
+  social_metric_id bigint [pk]
+  artist_id bigint [not null]
+  social_platform_id bigint [not null]
+  snapshot_date date [not null]
+  follower_count bigint
+  following_count bigint
+  total_posts bigint
+  total_likes bigint
+  total_comments bigint
+}
+
+Table Lyrics {
+  lyrics_id bigint [pk]
+  song_id bigint [not null]
+  language text
+  lyrics_available boolean [not null , default: false]
+  lyrics_source text
+  copyright_status text
+}
+
+Table TourEvent {
+  tour_event_id bigint [pk]
+  artist_id bigint [not null]
+  event_name text
+  venue_name text
+  city text
+  state_province text
+  country text
+  event_date date [not null]
+  festival_name text
+  headliner boolean [not null, default: false]
+}
+
+Table MediaOutlet {
+  media_outlet_id bigint [pk]
+  outlet_name text [not null, unique]
+  outlet_type text
+  official_website text
+  country text
+}
+
+Table MediaCoverage {
+  media_coverage_id bigint [pk]
+  artist_id bigint [not null]
+  media_outlet_id bigint [not null]
+  article_title text [not null]
+  media_type text [not null]
+  publication_date date [not null]
+  article_url text
+  sentiment text
+}
+
+Table PlaylistAppearance {
+  playlist_appearance_id bigint [pk]
+  song_id bigint [not null]
+  platform_id bigint [not null]
+  playlist_name text [not null]
+  playlist_type text
+  appearance_date date [not null]
+  removal_date date
+  playlist_followers bigint
+}
+
+Ref: Artist.current_label_id > Label.label_id
+Ref: Album.label_id > Label.label_id
+Ref: AudioFeature.song_id > Song.song_id
+Ref: StreamingHistory.song_id > Song.song_id
+Ref: StreamingHistory.platform_id > StreamingPlatform.platform_id
+Ref: SocialMetrics.artist_id > Artist.artist_id
+Ref: SocialMetrics.social_platform_id > SocialPlatform.social_platform_id
+Ref: Lyrics.song_id > Song.song_id
+Ref: TourEvent.artist_id > Artist.artist_id
+Ref: MediaCoverage.artist_id > Artist.artist_id
+Ref: MediaCoverage.media_outlet_id > MediaOutlet.media_outlet_id
+Ref: PlaylistAppearance.song_id > Song.song_id
+Ref: PlaylistAppearance.platform_id > StreamingPlatform.platform_id
+Ref: ArtistGenre.artist_id > Artist.artist_id
+Ref: ArtistGenre.genre_id > Genre.genre_id
+Ref: SongGenre.song_id > Song.song_id
+Ref: SongGenre.genre_id > Genre.genre_id
+Ref: AlbumGenre.album_id > Album.album_id
+Ref: AlbumGenre.genre_id > Genre.genre_id
+Ref: Genre.parent_genre_id > Genre.genre_id
